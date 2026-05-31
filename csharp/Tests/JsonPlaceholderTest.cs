@@ -15,7 +15,7 @@ namespace TestTask2.Tests
         [Fact]
         public async Task GetReturnsValidResponseAsync()
         {
-            var expectedId = 2;
+            var expectedId = 1;
             var (statusCode, responseData) = await _postsService.GetPostByIdAsync(expectedId);
 
             Assert.Equal(HttpStatusCode.OK, statusCode);
