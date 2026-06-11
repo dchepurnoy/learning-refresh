@@ -1,8 +1,10 @@
 import pytest
 
-from clients.PostsClient import PostsClient
+from clients.posts_client import PostsClient
 
 
 @pytest.fixture
 def api_client():
-    return PostsClient()
+    client = PostsClient()
+    yield client
+    client.session.close()

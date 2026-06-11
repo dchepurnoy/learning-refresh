@@ -1,16 +1,18 @@
 from dataclasses import dataclass
+from typing import Optional
+
 
 @dataclass
 class Post:
-    userId: int
-    id: int
-    title: str
-    body: str
+    user_id: Optional[int]
+    id: Optional[int]
+    title: Optional[str]
+    body: Optional[str]
 
     @classmethod
     def from_json(cls, json_data: dict):
         return cls(
-            userId=json_data.get('userId'),
+            user_id=json_data.get('userId'),
             id=json_data.get('id'),
             title=json_data.get('title'),
             body=json_data.get('body')
