@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using TestTask2.Models;
+using TestTask2.Models.Common;
 
 namespace TestTask2.Services
 {
@@ -15,28 +16,29 @@ namespace TestTask2.Services
             _client.BaseAddress = new Uri(_baseAddress);
         }
 
-        public async Task<(HttpStatusCode, PostResponse?)> GetPostByIdAsync(int id)
+        public async Task<ApiResponse<PostResponse>> GetPostByIdAsync(int id)
         {
-            if (id <= 0)
-            {
-                return (HttpStatusCode.BadRequest, null);
-            }
-
             string relativePath = $"posts/{id}";
             HttpResponseMessage response = await _client.GetAsync(relativePath);
 
-            if (!response.IsSuccessStatusCode) 
-            { 
-                return (response.StatusCode, null); 
+            string rawJson = await response.Content.ReadAsStringAsync();
+
+            var apiResponse = new ApiResponse<PostResponse>()
+            {
+                StatusCode = response.StatusCode,
+                RawContent = rawJson
+            };
+
+            if (response.StatusCode == HttpStatusCode.OK) 
+            {
+                apiResponse.Data = await GetDeserializedContent<PostResponse>(rawJson);
             }
 
-            PostResponse? responseData = await GetDeserializedContent<PostResponse?>(response);
-            return (response.StatusCode, responseData);
+            return apiResponse;
         }
 
-        private async Task<T?> GetDeserializedContent<T>(HttpResponseMessage response)
+        private async Task<T?> GetDeserializedContent<T>(string jsonResponse)
         {
-            string jsonResponse = await response.Content.ReadAsStringAsync();
             T? userData = JsonSerializer.Deserialize<T?>(jsonResponse);
             return userData;
         }
