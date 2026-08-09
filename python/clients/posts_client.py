@@ -21,3 +21,14 @@ class PostsClient:
         post_model = Post.from_json(response.json())
 
         return status_code, post_model
+
+    def create_new_post(self, post_data: dict) -> tuple[int, Post]:
+        url = f"{self.base_url}/posts"
+        response = self.session.post(url, json = post_data)
+        status_code = response.status_code
+
+        if status_code !=201:
+            return status_code, response.json()
+
+        post_model = Post.from_json(response.json())
+        return status_code, post_model
