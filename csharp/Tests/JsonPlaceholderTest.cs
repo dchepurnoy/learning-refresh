@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using TestTask2.Models;
 using TestTask2.Services;
 
 namespace TestTask2.Tests
@@ -73,6 +74,37 @@ namespace TestTask2.Tests
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, statusCode);
             Assert.Equal(expectedResponseBody, responseBody);
+        }
+
+        [Fact]
+        public async Task CreatePost_WithValidData_Returns201Created()
+        {
+            // Arrange
+            var payload = new PostRequest()
+            {
+                Title = "Test Post",
+                UserId = 1,
+                Body = "Test Body"
+            };
+
+            // Act
+            var response = await _postsService.CreatePostAsync(payload);
+            var statusCode = response.StatusCode;
+            var responseData = response.Data;
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Created, statusCode);
+            Assert.NotNull(response.Data);
+
+            Assert.Multiple(
+                () => Assert.True(responseData!.Id > 0, "Id must be grater than 0"),
+                () => Assert.True(responseData!.UserId > 0, "UserId must be grater than 0"),
+                () => Assert.False(string.IsNullOrEmpty(responseData!.Body), "Body should not be null or empty"),
+                () => Assert.False(string.IsNullOrEmpty(responseData!.Title), "Title should not be null or empty"),
+                () => Assert.Equal(payload.Title, responseData!.Title),
+                () => Assert.Equal(payload.Body, responseData!.Body),
+                () => Assert.Equal(payload.UserId, responseData!.UserId)
+                );
         }
     }
 }
