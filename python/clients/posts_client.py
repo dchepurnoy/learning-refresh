@@ -4,15 +4,14 @@ from models.post import Post
 
 
 class PostsClient:
-    BASE_URL = "https://jsonplaceholder.typicode.com"
-    def __init__(self, base_url=BASE_URL):
+    def __init__(self, base_url: str):
         self.base_url = base_url
         self.session = requests.Session()
 
     def get_post_by_id(self, post_id: int) -> tuple[int, Post]:
         url = f"{self.base_url}/posts/{post_id}"
-        
-        response = self.session.get(url)
+
+        response = self.session.get(url, timeout=(5, 10))
         status_code = response.status_code
 
         if status_code !=200:
@@ -24,7 +23,7 @@ class PostsClient:
 
     def create_new_post(self, post_data: dict) -> tuple[int, Post]:
         url = f"{self.base_url}/posts"
-        response = self.session.post(url, json = post_data)
+        response = self.session.post(url, json = post_data, timeout=(5, 10))
         status_code = response.status_code
 
         if status_code !=201:

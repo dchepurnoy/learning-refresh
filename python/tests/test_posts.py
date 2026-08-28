@@ -17,6 +17,7 @@ def test_get_post_by_id_returns_valid_data(api_client, expected_post_id:int):
 
 
 def test_get_post_by_unexistent_id_returns_404_not_found(api_client):
+
     unexistent_post_id = 999
     status_code, response = api_client.get_post_by_id(unexistent_post_id)
 
@@ -34,17 +35,12 @@ def test_get_post_by_invalid_id_returns_404_not_found(api_client, invalid_post_i
     assert response == {}, "Response JSON should be empty"
 
 
-def test_create_new_post_returns_201_created(api_client):
+def test_create_new_post_returns_201_created(api_client, post_payload):
 
-    post_data = {
-    "title": "Test Post",
-    "body": "Test Body",
-    "userId": 1
-}
-    expected_title = post_data['title']
-    expected_body = post_data['body']
+    expected_title = post_payload['title']
+    expected_body = post_payload['body']
 
-    status_code, response_data = api_client.create_new_post(post_data)
+    status_code, response_data = api_client.create_new_post(post_payload)
     assert status_code == 201, f"Expected status code 201, but got {status_code}"
     assert expected_title == response_data.title, f"Expected title should be {expected_title}"
     assert expected_body == response_data.body, f"Expected body should be {expected_body}"
