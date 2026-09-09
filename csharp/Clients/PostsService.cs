@@ -9,12 +9,10 @@ namespace TestTask2.Services
     public class PostsService 
     {
         private readonly HttpClient _client;
-        private readonly string _baseAddress = "https://jsonplaceholder.typicode.com/";
 
-        public PostsService(HttpClient client) 
+        public PostsService(HttpClient client)
         {
             _client = client;
-            _client.BaseAddress = new Uri(_baseAddress);
         }
 
         public async Task<ApiResponse<PostResponse>> GetPostByIdAsync(int id)
