@@ -1,0 +1,30 @@
+name: C# tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  csharp-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .Net
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: csharp
+
+      - name: Build
+        run: dotnet build --no-restore
+        working-directory: csharp
+
+      - name: C# tests
+        run: dotnet test --no-build --verbosity normal
+        working-directory: csharp
