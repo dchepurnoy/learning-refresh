@@ -45,5 +45,3 @@ def test_create_new_post_returns_201_created(api_client, post_payload):
     assert expected_title == response_data.title, f"Expected title should be {expected_title}"
     assert expected_body == response_data.body, f"Expected body should be {expected_body}"
     assert response_data.id is not None, "Response JSON does not contain 'id' key"
-    # Test should fail in CI
-    assert -1==len(response_data.body), "Validation for checking CI test run"
